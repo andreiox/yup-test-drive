@@ -3,11 +3,12 @@ import ValidationError from '../src/utils/errors/ValidationError';
 
 const isPropertiesInValidationError = (
     error: ValidationError,
-    properties: string[],
+    expectedProperties: string[],
 ) => {
-    for (let i = 0; i < error.errors.length; i++) {
-        const e = error.errors[i];
-        if (!properties.includes(e.property)) return false;
+    const errorProperties = error.errors.map(e => e.property);
+    for (let i = 0; i < expectedProperties.length; i++) {
+        const e = expectedProperties[i];
+        if (!errorProperties.includes(e)) return false;
     }
 
     return true;
@@ -31,6 +32,20 @@ describe('createUser', () => {
             expect(error).toBeInstanceOf(ValidationError);
             expect(
                 isPropertiesInValidationError(error, ['surname', 'age']),
+            ).toBeTruthy();
+        }
+    });
+
+    test('validation error wrong type fields', async () => {
+        expect.hasAssertions();
+
+        try {
+            const data = { name: 1, age: '42' } as any;
+            await createUser(data);
+        } catch (error) {
+            expect(error).toBeInstanceOf(ValidationError);
+            expect(
+                isPropertiesInValidationError(error, ['name', 'surname', 'age']),
             ).toBeTruthy();
         }
     });
