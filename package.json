@@ -1,0 +1,22 @@
+{
+  "name": "yup-test-drive",
+  "version": "1.0.0",
+  "description": "Taking yup for a spin!",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreiox/yup-test-drive.git"
+  },
+  "keywords": [
+    "yup"
+  ],
+  "author": "Andre Macedo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreiox/yup-test-drive/issues"
+  },
+  "homepage": "https://github.com/andreiox/yup-test-drive#readme"
+}
