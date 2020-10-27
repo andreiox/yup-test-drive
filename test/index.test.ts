@@ -13,21 +13,25 @@ const isPropertiesInValidationError = (
     return true;
 };
 
-test('createUser - data ok', async () => {
-    const data = { name: 'hello', surname: 'world', age: 42 };
-    const result = await createUser(data);
+describe('createUser', () => {
+    test('data ok', async () => {
+        const data = { name: 'hello', surname: 'world', age: 42 };
+        const result = await createUser(data);
 
-    expect(result).toBe(data);
-});
+        expect(result).toBe(data);
+    });
 
-test('createUser - validation error', async () => {
-    expect.hasAssertions();
+    test('validation error required fields', async () => {
+        expect.hasAssertions();
 
-    try {
-        const data = { name: 'hello', surname: 'world' } as any;
-        await createUser(data);
-    } catch (error) {
-        expect(error).toBeInstanceOf(ValidationError);
-        expect(isPropertiesInValidationError(error, ['age'])).toBeTruthy();
-    }
+        try {
+            const data = { name: 'hello' } as any;
+            await createUser(data);
+        } catch (error) {
+            expect(error).toBeInstanceOf(ValidationError);
+            expect(
+                isPropertiesInValidationError(error, ['surname', 'age']),
+            ).toBeTruthy();
+        }
+    });
 });
