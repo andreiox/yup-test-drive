@@ -1,4 +1,17 @@
 import { createUser } from '../src';
+import ValidationError from '../src/utils/errors/ValidationError';
+
+const isPropertiesInValidationError = (
+    error: ValidationError,
+    properties: string[],
+) => {
+    for (let i = 0; i < error.errors.length; i++) {
+        const e = error.errors[i];
+        if (!properties.includes(e.property)) return false;
+    }
+
+    return true;
+};
 
 test('createUser - data ok', async () => {
     const data = { name: 'hello', surname: 'world', age: 42 };
@@ -8,7 +21,13 @@ test('createUser - data ok', async () => {
 });
 
 test('createUser - validation error', async () => {
-    const data = { name: 'hello' } as any;
+    expect.hasAssertions();
 
-    await expect(createUser(data)).rejects.toThrow('User data not valid!');
+    try {
+        const data = { name: 'hello', surname: 'world' } as any;
+        await createUser(data);
+    } catch (error) {
+        expect(error).toBeInstanceOf(ValidationError);
+        expect(isPropertiesInValidationError(error, ['age'])).toBeTruthy();
+    }
 });
